@@ -1,1 +1,6 @@
 .DS_Store
+/notes
+os.img
+kernel/bin/*.bin
+kernel/bin/*.img
+kernel/bin/*.o
