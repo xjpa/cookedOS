@@ -1,5 +1,5 @@
 `$ make `
 
-`$ make un`
+`$ make run`
 
 `$ vncviewer`
