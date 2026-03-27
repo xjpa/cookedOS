@@ -31,5 +31,8 @@ bootloader:
 clean:
 	rm -f kernel/boot.img
 
-run:
+run: all
 	qemu-system-x86_64 -drive format=raw,file=os.img
+
+run-vnc: all
+	qemu-system-x86_64 -drive format=raw,file=os.img -display none -vnc :0

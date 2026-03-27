@@ -149,11 +149,15 @@ unsigned char MouseRead() {
     return inportb(0x60);
 }
 
+void FlushMouseOutput() {
+    while (inportb(0x64) & 1)
+        inportb(0x60);
+}
+
 void InitialiseMouse() {
     unsigned char status;
 
-    MouseWait(1);
-    outportb(0x64, 0xd4);
+    FlushMouseOutput();
 
     MouseWait(1);
     outportb(0x64, 0xa8);
@@ -161,19 +165,22 @@ void InitialiseMouse() {
     MouseWait(1);
     outportb(0x64, 0x20);
     MouseWait(0);
-    status = (inportb(0x60) | 2);
+    status = (inportb(0x60) | 2) & ~0x20;
     MouseWait(1);
     outportb(0x64, 0x60);
     MouseWait(1);
     outportb(0x60, status);
 
-    MouseWrite(0xff);
-    MouseRead();
     MouseWrite(0xf6);
     MouseRead();
-
     MouseWrite(0xf4);
     MouseRead();
+
+    FlushMouseOutput();
+    current_byte = 0;
+    bytes[0] = 0;
+    bytes[1] = 0;
+    bytes[2] = 0;
 }
 
 void  HandleMousePacket();
