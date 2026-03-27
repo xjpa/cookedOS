@@ -1,0 +1,5 @@
+`$ make `
+
+`$ make un`
+
+`$ vncviewer`
