@@ -130,17 +130,12 @@ int DesktopIconTask(int taskId)
 
 int TaskbarTask(int taskId)
 {
-    VBEInfoBlock *VBE = (VBEInfoBlock *)VBEInfoAddress;
     int x = iparams[taskId * task_params_length + 0];
     int y = iparams[taskId * task_params_length + 1];
     int width = iparams[taskId * task_params_length + 2];
     int height = iparams[taskId * task_params_length + 3];
     int textEditorTaskId = iparams[taskId * task_params_length + 4];
     int textEditorVisible = iparams[textEditorTaskId * task_params_length + 8];
-    int buttonX = x + 88;
-    int buttonY = y + 8;
-    int buttonWidth = 128;
-    int buttonHeight = height - 16;
     int statusX = x + width - 180;
 
     if (StartupPhase != startup_phase_desktop)
@@ -152,27 +147,21 @@ int TaskbarTask(int taskId)
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
                  "Apps", x + 24, y + 11, 31, 63, 31);
 
-    if (mx >= buttonX && mx <= buttonX + buttonWidth &&
-        my >= buttonY && my <= buttonY + buttonHeight)
-    {
-        if (left_clicked == TRUE)
-            LaunchWindowTask(taskId, textEditorTaskId);
-        RenderRect(buttonX, buttonY, buttonWidth, buttonHeight, 17, 34, 18);
-    }
-    else
-        RenderRect(buttonX, buttonY, buttonWidth, buttonHeight, 13, 26, 15);
-
     if (textEditorVisible == TRUE)
-        RenderRect(buttonX, y + height - 4, buttonWidth, 4, 31, 63, 31);
+    {
+        int appX = x + 88;
+        int appY = y + 8;
+        int appWidth = 128;
+        int appHeight = height - 16;
 
-    RenderString(getArialCharacter, font_arial_width, font_arial_height,
-                 "Text Editor", buttonX + 12, buttonY + 3, 31, 63, 31);
+        RenderRect(appX, appY, appWidth, appHeight, 13, 26, 15);
+        RenderRect(appX, y + height - 4, appWidth, 4, 31, 63, 31);
+        RenderString(getArialCharacter, font_arial_width, font_arial_height,
+                     "Text Editor", appX + 12, appY + 3, 31, 63, 31);
+    }
 
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
                  "Desktop ready", statusX, y + 11, 24, 52, 24);
-    RenderString(getArialCharacter, font_arial_width, font_arial_height,
-                 "640x480", VBE->x_resolution > 640 ? x + width - 90 : x + width - 74,
-                 y + 11, 18, 40, 18);
 
     return 0;
 }
