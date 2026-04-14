@@ -206,29 +206,29 @@ int BootSequenceTask(int taskId)
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
                  "--------------------------------", x, y + lineHeight, 18, 38, 18);
 
-    if (bootFrame > 15)
+    if (bootFrame > 8)
         RenderString(getArialCharacter, font_arial_width, font_arial_height,
                      resolutionLine, x, y + lineHeight * 3, 24, 48, 31);
-    if (bootFrame > 35)
+    if (bootFrame > 18)
         RenderBootLine(x, y + lineHeight * 5, "Framebuffer: initialized", TRUE, 8, 54, 8);
-    if (bootFrame > 55)
+    if (bootFrame > 28)
         RenderBootLine(x, y + lineHeight * 6, "Keyboard input: initialized", TRUE, 8, 54, 8);
-    if (bootFrame > 75)
+    if (bootFrame > 38)
         RenderBootLine(x, y + lineHeight * 7, "Mouse input: initialized", TRUE, 8, 54, 8);
-    if (bootFrame > 95)
+    if (bootFrame > 48)
         RenderBootLine(x, y + lineHeight * 8, "Interrupt table: loaded", TRUE, 8, 54, 8);
-    if (bootFrame > 115)
+    if (bootFrame > 58)
         RenderString(getArialCharacter, font_arial_width, font_arial_height,
                      taskLine, x, y + lineHeight * 9, 31, 63, 31);
-    if (bootFrame > 135)
+    if (bootFrame > 68)
         RenderBootLine(x, y + lineHeight * 10, "Desktop services: starting", TRUE, 8, 54, 8);
-    if (bootFrame > 155)
+    if (bootFrame > 78)
         RenderBootLine(x, y + lineHeight * 11, "Window manager: starting", TRUE, 8, 54, 8);
-    if (bootFrame > 175)
+    if (bootFrame > 88)
         RenderString(getArialCharacter, font_arial_width, font_arial_height,
                      "Launching session...", x, y + lineHeight * 13, 31, 54, 10);
 
-    if (bootFrame > 220)
+    if (bootFrame > 112)
     {
         StartupPhase = startup_phase_welcome;
         StartupFrame = 0;
@@ -252,7 +252,7 @@ int WelcomeScreenTask(int taskId)
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
                  "Preparing desktop session", 160, 178, 22, 44, 31);
 
-    dotCount = (welcomeFrame / 18) % 4;
+    dotCount = (welcomeFrame / 10) % 4;
     if (dotCount >= 0)
         RenderString(getArialCharacter, font_arial_width, font_arial_height,
                      dotCount == 0 ? "" : dotCount == 1 ? "."
@@ -261,11 +261,11 @@ int WelcomeScreenTask(int taskId)
                      392, 178, 22, 44, 31);
 
     RenderRect(160, 226, 320, 18, 8, 16, 21);
-    RenderRect(164, 230, (welcomeFrame * 312) / 150, 10, 10, 42, 18);
+    RenderRect(164, 230, (welcomeFrame * 312) / 80, 10, 10, 42, 18);
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
                  "Loading user workspace", 176, 270, 24, 52, 24);
 
-    if (welcomeFrame > 150)
+    if (welcomeFrame > 80)
     {
         StartupPhase = startup_phase_desktop;
         StartupFrame = 0;
