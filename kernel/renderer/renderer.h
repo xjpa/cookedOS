@@ -43,6 +43,8 @@ void Render(int x, int y, int r, int g, int b);
 void ClearScreen(int r, int g, int b);
 void RenderRect(int x, int y, int width, int height, int r, int g, int b);
 void RenderCircle(int x, int y, int radius, int r, int g, int b);
+int RenderCircleButton(int x, int y, int radius, int r, int g, int b);
+int RenderWindowFrame(int x, int y, int width, int height, char* title);
 void RenderCharacter(int (*f)(int, int), int font_width, int font_height, char character, int x, int y, int r, int g, int b);
 void RenderString(int (*f)(int, int), int font_width, int font_height, char* string, int x, int y, int r, int g, int b);
 void RenderStringWrapped(int (*f)(int, int), int font_width, int font_height, char* string, int x, int y, int max_width, int max_height, int r, int g, int b);

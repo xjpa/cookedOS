@@ -8,5 +8,6 @@
 #include "input/input.c"
 #include "ui/window.c"
 #include "tasks/task_core.c"
+#include "apps/text_editor.c"
 #include "tasks/tasks.c"
 #include "core/main.c"
