@@ -2,8 +2,10 @@
 #include "../tasks/task_core.h"
 #include "../renderer/renderer.h"
 
-static void AppendString(char* destination, int* index, const char* source) {
-    while (*source != '\0') {
+static void AppendString(char *destination, int *index, const char *source)
+{
+    while (*source != '\0')
+    {
         destination[*index] = *source;
         (*index)++;
         source++;
@@ -11,24 +13,28 @@ static void AppendString(char* destination, int* index, const char* source) {
     destination[*index] = '\0';
 }
 
-static void AppendNumber(char* destination, int* index, int value) {
+static void AppendNumber(char *destination, int *index, int value)
+{
     char digits[12];
     int digit_count = 0;
 
-    if (value == 0) {
+    if (value == 0)
+    {
         destination[*index] = '0';
         (*index)++;
         destination[*index] = '\0';
         return;
     }
 
-    while (value > 0 && digit_count < 11) {
+    while (value > 0 && digit_count < 11)
+    {
         digits[digit_count] = '0' + (value % 10);
         digit_count++;
         value /= 10;
     }
 
-    while (digit_count > 0) {
+    while (digit_count > 0)
+    {
         digit_count--;
         destination[*index] = digits[digit_count];
         (*index)++;
@@ -36,7 +42,8 @@ static void AppendNumber(char* destination, int* index, int value) {
     destination[*index] = '\0';
 }
 
-static void BuildResolutionLine(char* buffer, VBEInfoBlock* VBE) {
+static void BuildResolutionLine(char *buffer, VBEInfoBlock *VBE)
+{
     int index = 0;
     buffer[0] = '\0';
     AppendString(buffer, &index, "Video mode: ");
@@ -47,7 +54,8 @@ static void BuildResolutionLine(char* buffer, VBEInfoBlock* VBE) {
     AppendNumber(buffer, &index, VBE->bits_per_pixel);
 }
 
-static void BuildTaskLine(char* buffer) {
+static void BuildTaskLine(char *buffer)
+{
     int index = 0;
     buffer[0] = '\0';
     AppendString(buffer, &index, "Task scheduler: online (");
@@ -55,16 +63,19 @@ static void BuildTaskLine(char* buffer) {
     AppendString(buffer, &index, " tasks)");
 }
 
-static void RenderBootLine(int x, int y, const char* label, int showStatus, int statusR, int statusG, int statusB) {
+static void RenderBootLine(int x, int y, const char *label, int showStatus, int statusR, int statusG, int statusB)
+{
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
-                 (char*)label, x, y, 31, 63, 31);
-    if (showStatus == TRUE) {
+                 (char *)label, x, y, 31, 63, 31);
+    if (showStatus == TRUE)
+    {
         RenderString(getArialCharacter, font_arial_width, font_arial_height,
                      "[ OK ]", x + 440, y, statusR, statusG, statusB);
     }
 }
 
-int ClearScreenTask(int taskId) {
+int ClearScreenTask(int taskId)
+{
     if (StartupPhase == startup_phase_boot)
         ClearScreen(0, 0, 0);
     else if (StartupPhase == startup_phase_welcome)
@@ -74,7 +85,8 @@ int ClearScreenTask(int taskId) {
     return 0;
 }
 
-int DesktopIconTask(int taskId) {
+int DesktopIconTask(int taskId)
+{
     int x = iparams[taskId * task_params_length + 0];
     int y = iparams[taskId * task_params_length + 1];
     int width = iparams[taskId * task_params_length + 2];
@@ -92,8 +104,10 @@ int DesktopIconTask(int taskId) {
     if (targetWindowVisible == FALSE &&
         left_clicked == TRUE &&
         mx >= x && mx <= x + width &&
-        my >= y && my <= y + height + font_arial_height + 6) {
-        if (isPressed == FALSE) {
+        my >= y && my <= y + height + font_arial_height + 6)
+    {
+        if (isPressed == FALSE)
+        {
             iparams[targetTaskId * task_params_length + 8] = TRUE;
             left_clicked = FALSE;
         }
@@ -104,21 +118,23 @@ int DesktopIconTask(int taskId) {
     RenderRect(x + 16, y, width - 20, 12, 31, 31, 31);
     RenderRect(x + 18, y + 18, width - 28, height - 28, 12, 24, 31);
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
-                 "Files", x - 2, y + height + 4, 31, 31, 31);
+                 "Text", x - 2, y + height + 4, 31, 31, 31);
     return 0;
 }
 
-int RenderMouseTask(int taskId) {
+int RenderMouseTask(int taskId)
+{
     if (StartupPhase != startup_phase_desktop)
         return 0;
     RenderMouse(mx, my, 16, (100.0 / 255.0 * 32), (100.0 / 255.0 * 16));
     return 0;
 }
 
-int HandleKeyboardTask(int taskId) {
+int HandleKeyboardTask(int taskId)
+{
     int windowTaskId = 2;
-    char* characterBuffer = tasks[taskId].ca1;
-    int* characterBufferLength = &tasks[taskId].i1;
+    char *characterBuffer = tasks[taskId].ca1;
+    int *characterBufferLength = &tasks[taskId].i1;
     char character = ProcessScancode(Scancode);
     int windowVisible = iparams[windowTaskId * task_params_length + 8];
     int windowX = iparams[windowTaskId * task_params_length + 0];
@@ -132,15 +148,19 @@ int HandleKeyboardTask(int taskId) {
     if (windowVisible == FALSE)
         return 0;
 
-    if (backspace_pressed == TRUE) {
-        if (*characterBufferLength > 0) {
+    if (backspace_pressed == TRUE)
+    {
+        if (*characterBufferLength > 0)
+        {
             characterBuffer[*characterBufferLength - 1] = '\0';
             (*characterBufferLength)--;
         }
         backspace_pressed = FALSE;
         Scancode = -1;
-    } else if (character != '\0' &&
-               *characterBufferLength < (int)(sizeof(tasks[taskId].ca1) - 1)) {
+    }
+    else if (character != '\0' &&
+             *characterBufferLength < (int)(sizeof(tasks[taskId].ca1) - 1))
+    {
         characterBuffer[*characterBufferLength] = character;
         characterBuffer[*characterBufferLength + 1] = '\0';
         (*characterBufferLength)++;
@@ -154,7 +174,8 @@ int HandleKeyboardTask(int taskId) {
     return 0;
 }
 
-int TestGraphicalElementsTask(int taskId) {
+int TestGraphicalElementsTask(int taskId)
+{
     int x = iparams[taskId * task_params_length + 0];
     int y = iparams[taskId * task_params_length + 1];
     int width = iparams[taskId * task_params_length + 2];
@@ -170,29 +191,30 @@ int TestGraphicalElementsTask(int taskId) {
     if (left_clicked == FALSE)
         iparams[taskId * task_params_length + 9] = FALSE;
 
-    if (iparams[taskId * task_params_length + 9] == TRUE || 
+    if (iparams[taskId * task_params_length + 9] == TRUE ||
         (left_clicked == TRUE && mx > x + 60 &&
          mx < x + width &&
          my > y &&
-         my < y + 20)) {
+         my < y + 20))
+    {
         left_clicked = FALSE;
         iparams[taskId * task_params_length + 9] = TRUE;
         iparams[taskId * task_params_length + 0] = mx - (width / 2);
         iparams[taskId * task_params_length + 1] = my - 10;
     }
     if (RenderWindow(
-        iparams[taskId * task_params_length + 0],
-        iparams[taskId * task_params_length + 1],
-        width,
-        height,
-        31, 31, 31
-    ) == 1)
+            iparams[taskId * task_params_length + 0],
+            iparams[taskId * task_params_length + 1],
+            width,
+            height,
+            31, 31, 31) == 1)
         iparams[taskId * task_params_length + 8] = FALSE;
     return 0;
 }
 
-int BootSequenceTask(int taskId) {
-    VBEInfoBlock* VBE = (VBEInfoBlock*) VBEInfoAddress;
+int BootSequenceTask(int taskId)
+{
+    VBEInfoBlock *VBE = (VBEInfoBlock *)VBEInfoAddress;
     char resolutionLine[48];
     char taskLine[48];
     int bootFrame = StartupFrame;
@@ -233,7 +255,8 @@ int BootSequenceTask(int taskId) {
         RenderString(getArialCharacter, font_arial_width, font_arial_height,
                      "Launching session...", x, y + lineHeight * 13, 31, 54, 10);
 
-    if (bootFrame > 220) {
+    if (bootFrame > 220)
+    {
         StartupPhase = startup_phase_welcome;
         StartupFrame = 0;
     }
@@ -241,7 +264,8 @@ int BootSequenceTask(int taskId) {
     return 0;
 }
 
-int WelcomeScreenTask(int taskId) {
+int WelcomeScreenTask(int taskId)
+{
     int welcomeFrame = StartupFrame;
     int dotCount;
 
@@ -258,9 +282,9 @@ int WelcomeScreenTask(int taskId) {
     dotCount = (welcomeFrame / 18) % 4;
     if (dotCount >= 0)
         RenderString(getArialCharacter, font_arial_width, font_arial_height,
-                     dotCount == 0 ? "" :
-                     dotCount == 1 ? "." :
-                     dotCount == 2 ? ".." : "...",
+                     dotCount == 0 ? "" : dotCount == 1 ? "."
+                                      : dotCount == 2   ? ".."
+                                                        : "...",
                      392, 178, 22, 44, 31);
 
     RenderRect(160, 226, 320, 18, 8, 16, 21);
@@ -268,7 +292,8 @@ int WelcomeScreenTask(int taskId) {
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
                  "Loading user workspace", 176, 270, 24, 52, 24);
 
-    if (welcomeFrame > 150) {
+    if (welcomeFrame > 150)
+    {
         StartupPhase = startup_phase_desktop;
         StartupFrame = 0;
     }
