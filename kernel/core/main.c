@@ -49,6 +49,16 @@ int start() {
 
     tasks[TasksLength].priority = 0;
     tasks[TasksLength].taskId = TasksLength;
+    tasks[TasksLength].function = &BootSequenceTask;
+    TasksLength++;
+
+    tasks[TasksLength].priority = 0;
+    tasks[TasksLength].taskId = TasksLength;
+    tasks[TasksLength].function = &WelcomeScreenTask;
+    TasksLength++;
+
+    tasks[TasksLength].priority = 0;
+    tasks[TasksLength].taskId = TasksLength;
     tasks[TasksLength].function = &RenderMouseTask;
     TasksLength++;
 

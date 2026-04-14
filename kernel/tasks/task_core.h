@@ -5,6 +5,9 @@
 #define task_type_void 0
 #define task_type_string_buffer 1
 #define task_params_length 10
+#define startup_phase_boot 0
+#define startup_phase_welcome 1
+#define startup_phase_desktop 2
 
 struct Task {
     int priority;  // 0 to 5, 0 being highest
@@ -17,6 +20,8 @@ struct Task {
 extern int TasksLength;
 extern struct Task tasks[256];
 extern int iparams[100];
+extern int StartupPhase;
+extern int StartupFrame;
 
 void ProcessTasks();
 void CloseTask(int taskId);

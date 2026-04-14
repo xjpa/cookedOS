@@ -4,9 +4,12 @@
 int TasksLength = 0;
 struct Task tasks[256];
 int iparams[100] = {10};
+int StartupPhase = startup_phase_boot;
+int StartupFrame = 0;
 
 void ProcessTasks() {
     int priority = 0;
+    StartupFrame++;
     while (priority <= 5) {
         for (int i = 0; i < TasksLength; i++) {
             if (tasks[i].priority == priority) {
