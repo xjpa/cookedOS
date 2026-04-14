@@ -1,5 +1,6 @@
 #include "../renderer/renderer.h"
 static int frame = 0;
+
 // Update your RenderCircleButton so that it always shows full color when not hovered,
 // and only pulsates (using full color) when the mouse is over it.
 int RenderCircleButton(int x, int y, int radius, int r, int g, int b) {
@@ -23,9 +24,10 @@ int RenderCircleButton(int x, int y, int radius, int r, int g, int b) {
 // Modify RenderWindow to draw 3 buttons in the title bar, as in macOS.
 // The leftmost button (red) is interactive; the other two (yellow and green) are just aesthetic.
 int RenderWindow(int x, int y, int width, int height, int r, int g, int b) {
-    // Draw the window's title bar and content area.
-    RenderRect(x, y, width, 20, 255, 255, 255);
-    RenderRect(x, y + 20, width, height, r, g, b);
+    // Draw a TextEdit-like window with a soft grey title bar and white document area.
+    RenderRect(x, y, width, 20, 22, 44, 22);
+    RenderRect(x, y + 20, width, height, 25, 50, 25);
+    RenderRect(x + 1, y + 21, width - 2, height - 2, 31, 63, 31);
 
     // Render the interactive red close button.
     // Placed at x + 10 so it sits at the left side of the title bar.
@@ -36,6 +38,9 @@ int RenderWindow(int x, int y, int width, int height, int r, int g, int b) {
     RenderCircle(x + 30, y + 10, 8, 31, 31, 0);
     // Green button at x + 50.
     RenderCircle(x + 50, y + 10, 8, 0, 31, 0);
+
+    RenderString(getArialCharacter, font_arial_width, font_arial_height,
+                 "Untitled", x + 120, y + 3, 8, 16, 8);
 
     return closeClicked;
 }

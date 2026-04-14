@@ -44,22 +44,38 @@ int RenderMouseTask(int taskId) {
 }
 
 int HandleKeyboardTask(int taskId) {
+    int windowTaskId = 2;
     char* characterBuffer = tasks[taskId].ca1;
     int* characterBufferLength = &tasks[taskId].i1;
     char character = ProcessScancode(Scancode);
+    int windowVisible = iparams[windowTaskId * task_params_length + 8];
+    int windowX = iparams[windowTaskId * task_params_length + 0];
+    int windowY = iparams[windowTaskId * task_params_length + 1];
+    int windowWidth = iparams[windowTaskId * task_params_length + 2];
+    int windowHeight = iparams[windowTaskId * task_params_length + 3];
+
+    if (windowVisible == FALSE)
+        return 0;
 
     if (backspace_pressed == TRUE) {
-        characterBuffer[*characterBufferLength - 1] = '\0';
-        (*characterBufferLength)--;
+        if (*characterBufferLength > 0) {
+            characterBuffer[*characterBufferLength - 1] = '\0';
+            (*characterBufferLength)--;
+        }
         backspace_pressed = FALSE;
         Scancode = -1;
-    } else if (character != '\0') {
+    } else if (character != '\0' &&
+               *characterBufferLength < (int)(sizeof(tasks[taskId].ca1) - 1)) {
         characterBuffer[*characterBufferLength] = character;
         characterBuffer[*characterBufferLength + 1] = '\0';
         (*characterBufferLength)++;
         Scancode = -1;
     }
-    RenderString(getArialCharacter, font_arial_width, font_arial_height, characterBuffer, 100, 100, 0, 0, 0);
+
+    RenderRect(windowX + 8, windowY + 28, 2, 2, 24, 24, 24);
+    RenderStringWrapped(getArialCharacter, font_arial_width, font_arial_height,
+                        characterBuffer, windowX + 16, windowY + 36,
+                        windowWidth - 32, windowHeight - 44, 0, 0, 0);
     return 0;
 }
 
@@ -91,7 +107,7 @@ int TestGraphicalElementsTask(int taskId) {
         iparams[taskId * task_params_length + 1],
         width,
         height,
-        0, 0, 0
+        31, 31, 31
     ) == 1)
         iparams[taskId * task_params_length + 8] = FALSE;
     return 0;
