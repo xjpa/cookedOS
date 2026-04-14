@@ -7,6 +7,37 @@ int ClearScreenTask(int taskId) {
     return 0;
 }
 
+int DesktopIconTask(int taskId) {
+    int x = iparams[taskId * task_params_length + 0];
+    int y = iparams[taskId * task_params_length + 1];
+    int width = iparams[taskId * task_params_length + 2];
+    int height = iparams[taskId * task_params_length + 3];
+    int targetTaskId = iparams[taskId * task_params_length + 4];
+    int isPressed = iparams[taskId * task_params_length + 9];
+    int targetWindowVisible = iparams[targetTaskId * task_params_length + 8];
+
+    if (left_clicked == FALSE)
+        iparams[taskId * task_params_length + 9] = FALSE;
+
+    if (targetWindowVisible == FALSE &&
+        left_clicked == TRUE &&
+        mx >= x && mx <= x + width &&
+        my >= y && my <= y + height + font_arial_height + 6) {
+        if (isPressed == FALSE) {
+            iparams[targetTaskId * task_params_length + 8] = TRUE;
+            left_clicked = FALSE;
+        }
+        iparams[taskId * task_params_length + 9] = TRUE;
+    }
+
+    RenderRect(x + 10, y + 6, width - 20, height - 16, 6, 18, 31);
+    RenderRect(x + 16, y, width - 20, 12, 31, 31, 31);
+    RenderRect(x + 18, y + 18, width - 28, height - 28, 12, 24, 31);
+    RenderString(getArialCharacter, font_arial_width, font_arial_height,
+                 "Files", x - 2, y + height + 4, 31, 31, 31);
+    return 0;
+}
+
 int RenderMouseTask(int taskId) {
     RenderMouse(mx, my, 16, (100.0 / 255.0 * 32), (100.0 / 255.0 * 16));
     return 0;

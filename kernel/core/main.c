@@ -18,7 +18,18 @@ int start() {
     InitialiseIDT();
 
     tasks[TasksLength].priority = 0;
+    tasks[TasksLength].taskId = TasksLength;
     tasks[TasksLength].function = &ClearScreenTask;
+    TasksLength++;
+
+    tasks[TasksLength].priority = 0;
+    tasks[TasksLength].taskId = TasksLength;
+    tasks[TasksLength].function = &DesktopIconTask;
+    iparams[TasksLength * task_params_length + 0] = 24;
+    iparams[TasksLength * task_params_length + 1] = 24;
+    iparams[TasksLength * task_params_length + 2] = 52;
+    iparams[TasksLength * task_params_length + 3] = 52;
+    iparams[TasksLength * task_params_length + 4] = 2;
     TasksLength++;
 
     tasks[TasksLength].priority = 0;
@@ -28,14 +39,16 @@ int start() {
     iparams[TasksLength * task_params_length + 1] = 10;
     iparams[TasksLength * task_params_length + 2] = 300;
     iparams[TasksLength * task_params_length + 3] = 300;
-    iparams[TasksLength * task_params_length + 8] = TRUE;
+    iparams[TasksLength * task_params_length + 8] = FALSE;
     TasksLength++;
 
     tasks[TasksLength].priority = 0;
+    tasks[TasksLength].taskId = TasksLength;
     tasks[TasksLength].function = &HandleKeyboardTask;
     TasksLength++;
 
     tasks[TasksLength].priority = 0;
+    tasks[TasksLength].taskId = TasksLength;
     tasks[TasksLength].function = &RenderMouseTask;
     TasksLength++;
 
