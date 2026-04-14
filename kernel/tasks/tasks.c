@@ -33,26 +33,35 @@ int HandleKeyboardTask(int taskId) {
 }
 
 int TestGraphicalElementsTask(int taskId) {
+    int x = iparams[taskId * task_params_length + 0];
+    int y = iparams[taskId * task_params_length + 1];
+    int width = iparams[taskId * task_params_length + 2];
+    int height = iparams[taskId * task_params_length + 3];
+    int isVisible = iparams[taskId * task_params_length + 8];
+
+    if (isVisible == FALSE)
+        return 0;
+
     if (left_clicked == FALSE)
         iparams[taskId * task_params_length + 9] = FALSE;
 
     if (iparams[taskId * task_params_length + 9] == TRUE || 
-        (left_clicked == TRUE && mx > iparams[taskId * task_params_length + 0] &&
-         mx < iparams[taskId * task_params_length + 0] + iparams[taskId * task_params_length + 2] - 30 &&
-         my > iparams[taskId * task_params_length + 1] &&
-         my < iparams[taskId * task_params_length + 1] + 20)) {
+        (left_clicked == TRUE && mx > x + 60 &&
+         mx < x + width &&
+         my > y &&
+         my < y + 20)) {
         left_clicked = FALSE;
         iparams[taskId * task_params_length + 9] = TRUE;
-        iparams[taskId * task_params_length + 0] = mx - (iparams[taskId * task_params_length + 2] / 2);
+        iparams[taskId * task_params_length + 0] = mx - (width / 2);
         iparams[taskId * task_params_length + 1] = my - 10;
     }
     if (RenderWindow(
         iparams[taskId * task_params_length + 0],
         iparams[taskId * task_params_length + 1],
-        iparams[taskId * task_params_length + 2],
-        iparams[taskId * task_params_length + 3],
+        width,
+        height,
         0, 0, 0
     ) == 1)
-        CloseTask(taskId);
+        iparams[taskId * task_params_length + 8] = FALSE;
     return 0;
 }

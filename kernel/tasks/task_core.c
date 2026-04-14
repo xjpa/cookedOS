@@ -18,8 +18,21 @@ void ProcessTasks() {
 }
 
 void CloseTask(int taskId) {
+    int lastTaskIndex = TasksLength - 1;
+
     for (int i = taskId; i < TasksLength - 1; i++) {
         tasks[i] = tasks[i + 1];
+        tasks[i].taskId = i;
+
+        for (int j = 0; j < task_params_length; j++) {
+            iparams[i * task_params_length + j] =
+                iparams[(i + 1) * task_params_length + j];
+        }
     }
+
+    for (int j = 0; j < task_params_length; j++) {
+        iparams[lastTaskIndex * task_params_length + j] = 0;
+    }
+
     TasksLength--;
 }
