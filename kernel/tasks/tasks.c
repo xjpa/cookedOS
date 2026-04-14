@@ -136,7 +136,6 @@ int TaskbarTask(int taskId)
     int height = iparams[taskId * task_params_length + 3];
     int textEditorTaskId = iparams[taskId * task_params_length + 4];
     int textEditorVisible = iparams[textEditorTaskId * task_params_length + 8];
-    int statusX = x + width - 180;
 
     if (StartupPhase != startup_phase_desktop)
         return 0;
@@ -159,9 +158,6 @@ int TaskbarTask(int taskId)
         RenderString(getArialCharacter, font_arial_width, font_arial_height,
                      "Text Editor", appX + 12, appY + 3, 31, 63, 31);
     }
-
-    RenderString(getArialCharacter, font_arial_width, font_arial_height,
-                 "Desktop ready", statusX, y + 11, 24, 52, 24);
 
     return 0;
 }
