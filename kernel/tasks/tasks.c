@@ -74,6 +74,21 @@ static void RenderBootLine(int x, int y, const char *label, int showStatus, int 
     }
 }
 
+static void LaunchWindowTask(int launcherTaskId, int targetTaskId)
+{
+    int isPressed = iparams[launcherTaskId * task_params_length + 9];
+
+    if (left_clicked == FALSE)
+        iparams[launcherTaskId * task_params_length + 9] = FALSE;
+
+    if (left_clicked == TRUE && isPressed == FALSE)
+    {
+        iparams[targetTaskId * task_params_length + 8] = TRUE;
+        iparams[launcherTaskId * task_params_length + 9] = TRUE;
+        left_clicked = FALSE;
+    }
+}
+
 int ClearScreenTask(int taskId)
 {
     if (StartupPhase == startup_phase_boot)
@@ -92,26 +107,17 @@ int DesktopIconTask(int taskId)
     int width = iparams[taskId * task_params_length + 2];
     int height = iparams[taskId * task_params_length + 3];
     int targetTaskId = iparams[taskId * task_params_length + 4];
-    int isPressed = iparams[taskId * task_params_length + 9];
     int targetWindowVisible = iparams[targetTaskId * task_params_length + 8];
 
     if (StartupPhase != startup_phase_desktop)
         return 0;
-
-    if (left_clicked == FALSE)
-        iparams[taskId * task_params_length + 9] = FALSE;
 
     if (targetWindowVisible == FALSE &&
         left_clicked == TRUE &&
         mx >= x && mx <= x + width &&
         my >= y && my <= y + height + font_arial_height + 6)
     {
-        if (isPressed == FALSE)
-        {
-            iparams[targetTaskId * task_params_length + 8] = TRUE;
-            left_clicked = FALSE;
-        }
-        iparams[taskId * task_params_length + 9] = TRUE;
+        LaunchWindowTask(taskId, targetTaskId);
     }
 
     RenderRect(x + 10, y + 6, width - 20, height - 16, 6, 18, 31);
@@ -119,6 +125,55 @@ int DesktopIconTask(int taskId)
     RenderRect(x + 18, y + 18, width - 28, height - 28, 12, 24, 31);
     RenderString(getArialCharacter, font_arial_width, font_arial_height,
                  "Text", x - 2, y + height + 4, 31, 31, 31);
+    return 0;
+}
+
+int TaskbarTask(int taskId)
+{
+    VBEInfoBlock *VBE = (VBEInfoBlock *)VBEInfoAddress;
+    int x = iparams[taskId * task_params_length + 0];
+    int y = iparams[taskId * task_params_length + 1];
+    int width = iparams[taskId * task_params_length + 2];
+    int height = iparams[taskId * task_params_length + 3];
+    int textEditorTaskId = iparams[taskId * task_params_length + 4];
+    int textEditorVisible = iparams[textEditorTaskId * task_params_length + 8];
+    int buttonX = x + 88;
+    int buttonY = y + 8;
+    int buttonWidth = 128;
+    int buttonHeight = height - 16;
+    int statusX = x + width - 180;
+
+    if (StartupPhase != startup_phase_desktop)
+        return 0;
+
+    RenderRect(x, y, width, height, 10, 20, 12);
+    RenderRect(x, y, width, 2, 17, 34, 18);
+    RenderRect(x + 14, y + 8, 56, height - 16, 13, 26, 15);
+    RenderString(getArialCharacter, font_arial_width, font_arial_height,
+                 "Apps", x + 24, y + 11, 31, 63, 31);
+
+    if (mx >= buttonX && mx <= buttonX + buttonWidth &&
+        my >= buttonY && my <= buttonY + buttonHeight)
+    {
+        if (left_clicked == TRUE)
+            LaunchWindowTask(taskId, textEditorTaskId);
+        RenderRect(buttonX, buttonY, buttonWidth, buttonHeight, 17, 34, 18);
+    }
+    else
+        RenderRect(buttonX, buttonY, buttonWidth, buttonHeight, 13, 26, 15);
+
+    if (textEditorVisible == TRUE)
+        RenderRect(buttonX, y + height - 4, buttonWidth, 4, 31, 63, 31);
+
+    RenderString(getArialCharacter, font_arial_width, font_arial_height,
+                 "Text Editor", buttonX + 12, buttonY + 3, 31, 63, 31);
+
+    RenderString(getArialCharacter, font_arial_width, font_arial_height,
+                 "Desktop ready", statusX, y + 11, 24, 52, 24);
+    RenderString(getArialCharacter, font_arial_width, font_arial_height,
+                 "640x480", VBE->x_resolution > 640 ? x + width - 90 : x + width - 74,
+                 y + 11, 18, 40, 18);
+
     return 0;
 }
 
