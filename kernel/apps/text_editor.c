@@ -4,20 +4,23 @@
 static char TextEditorTitle[] = "Text Editor";
 
 int TextEditorInputTask(int taskId) {
-    int windowTaskId = iparams[taskId * task_params_length + 0];
+    return 0;
+}
+
+int TextEditorWindowTask(int taskId) {
+    int x = iparams[taskId * task_params_length + 0];
+    int y = iparams[taskId * task_params_length + 1];
+    int width = iparams[taskId * task_params_length + 2];
+    int height = iparams[taskId * task_params_length + 3];
+    int isVisible = iparams[taskId * task_params_length + 8];
     char* characterBuffer = tasks[taskId].ca1;
     int* characterBufferLength = &tasks[taskId].i1;
     char character = ProcessScancode(Scancode);
-    int windowVisible = iparams[windowTaskId * task_params_length + 8];
-    int windowX = iparams[windowTaskId * task_params_length + 0];
-    int windowY = iparams[windowTaskId * task_params_length + 1];
-    int windowWidth = iparams[windowTaskId * task_params_length + 2];
-    int windowHeight = iparams[windowTaskId * task_params_length + 3];
 
     if (StartupPhase != startup_phase_desktop)
         return 0;
 
-    if (windowVisible == FALSE)
+    if (isVisible == FALSE)
         return 0;
 
     if (backspace_pressed == TRUE) {
@@ -34,25 +37,6 @@ int TextEditorInputTask(int taskId) {
         (*characterBufferLength)++;
         Scancode = -1;
     }
-
-    RenderStringWrapped(getArialCharacter, font_arial_width, font_arial_height,
-                        characterBuffer, windowX + 16, windowY + 36,
-                        windowWidth - 32, windowHeight - 44, 0, 0, 0);
-    return 0;
-}
-
-int TextEditorWindowTask(int taskId) {
-    int x = iparams[taskId * task_params_length + 0];
-    int y = iparams[taskId * task_params_length + 1];
-    int width = iparams[taskId * task_params_length + 2];
-    int height = iparams[taskId * task_params_length + 3];
-    int isVisible = iparams[taskId * task_params_length + 8];
-
-    if (StartupPhase != startup_phase_desktop)
-        return 0;
-
-    if (isVisible == FALSE)
-        return 0;
 
     if (left_clicked == FALSE)
         iparams[taskId * task_params_length + 9] = FALSE;
@@ -75,6 +59,11 @@ int TextEditorWindowTask(int taskId) {
             height,
             TextEditorTitle) == 1)
         iparams[taskId * task_params_length + 8] = FALSE;
+
+    RenderStringWrapped(getArialCharacter, font_arial_width, font_arial_height,
+                        characterBuffer, iparams[taskId * task_params_length + 0] + 16,
+                        iparams[taskId * task_params_length + 1] + 36,
+                        width - 32, height - 44, 0, 0, 0);
 
     return 0;
 }

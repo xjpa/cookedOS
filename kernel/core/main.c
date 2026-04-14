@@ -7,7 +7,6 @@ int start() {
     int desktopIconTaskId;
     int taskbarTaskId;
     int textEditorWindowTaskId;
-    int textEditorInputTaskId;
 
     mx = VBE->x_resolution / 2;
     my = VBE->y_resolution / 2;
@@ -52,13 +51,6 @@ int start() {
     iparams[textEditorWindowTaskId * task_params_length + 2] = 300;
     iparams[textEditorWindowTaskId * task_params_length + 3] = 300;
     iparams[textEditorWindowTaskId * task_params_length + 8] = FALSE;
-    TasksLength++;
-
-    textEditorInputTaskId = TasksLength;
-    tasks[TasksLength].priority = 0;
-    tasks[TasksLength].taskId = TasksLength;
-    tasks[TasksLength].function = &TextEditorInputTask;
-    iparams[textEditorInputTaskId * task_params_length + 0] = textEditorWindowTaskId;
     TasksLength++;
 
     iparams[desktopIconTaskId * task_params_length + 4] = textEditorWindowTaskId;
