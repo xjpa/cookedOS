@@ -25,7 +25,7 @@ bootloader:
 	$(CC) -m32 -ffreestanding -c kernel/master.c -o kernel/bin/kernel.o
 	$(LD) -m elf_i386 -o kernel/bin/kernel.img -Ttext 0x1000 kernel/bin/kernel_entry.bin kernel/bin/kernel.o
 
-	$(OBJCOPY) -O binary -j .text kernel/bin/kernel.img kernel/bin/kernel.bin
+	$(OBJCOPY) -O binary kernel/bin/kernel.img kernel/bin/kernel.bin
 	cat kernel/bin/boot.bin kernel/bin/kernel.bin > os.img
 
 clean:
