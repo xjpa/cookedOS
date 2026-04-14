@@ -33,6 +33,10 @@ If the native QEMU window does not handle trackpad mouse input correctly on macO
 2. Open `TigerVNC.app`
 3. Connect to `127.0.0.1:5900`
 
-## Screenshot
+## Screenshotss
 
-![](screenshot.png)
+![](screenshot1.jpg)
+
+![](screenshot2.jpg)
+
+![](screenshot3.jpg)
