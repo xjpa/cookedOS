@@ -1,3 +1,7 @@
+## cookedOS
+
+Simple, very tiny OS. I had too much fun coding an OS in early 2025 for an OS class at De La Salle University, but at the time I never got to do much "userspace" coding. Here,  everything is running on ring-0 so I can toy with and prototype useable apps fast that the user can interact with, thereby mimicking a "userspace" despite architecturally there being no process isolation.
+
 ## Build
 
 ```bash
