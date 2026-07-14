@@ -26,6 +26,12 @@ bootloader:
 	$(LD) -m elf_i386 -o kernel/bin/kernel.img -Ttext 0x1000 kernel/bin/kernel_entry.bin kernel/bin/kernel.o
 
 	$(OBJCOPY) -O binary kernel/bin/kernel.img kernel/bin/kernel.bin
+	@kernel_size=$$(wc -c < kernel/bin/kernel.bin); \
+	limit=$$((50 * 512)); \
+	if [ "$$kernel_size" -gt "$$limit" ]; then \
+		echo "kernel/bin/kernel.bin is $$kernel_size bytes, but boot.asm only loads $$limit bytes"; \
+		exit 1; \
+	fi
 	cat kernel/bin/boot.bin kernel/bin/kernel.bin > os.img
 
 clean:
