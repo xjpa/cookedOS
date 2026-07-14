@@ -9,7 +9,7 @@ global isr1, isr12
 global LoadIDT
 
 IDTDesc:
-	dw 2048
+	dw 2047
 	dd _idt
 
 isr1:
