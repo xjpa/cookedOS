@@ -112,6 +112,9 @@ int DesktopIconTask(int taskId)
     if (StartupPhase != startup_phase_desktop)
         return 0;
 
+    if (left_clicked == FALSE)
+        iparams[taskId * task_params_length + 9] = FALSE;
+
     if (targetWindowVisible == FALSE &&
         left_clicked == TRUE &&
         mx >= x && mx <= x + width &&
